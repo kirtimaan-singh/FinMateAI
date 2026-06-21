@@ -38,7 +38,7 @@ st.markdown("""
         background-image: 
             radial-gradient(circle at 90% 10%, rgba(27, 94, 32, 0.04) 0%, transparent 50%),
             linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(245, 247, 246, 1) 100%),
-            url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none" opacity="0.04"><path fill="%231B5E20" d="M0,224L120,202.7C240,181,480,139,720,138.7C960,139,1200,181,1320,202.7L1440,224L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path><path fill="%232E7D32" d="M0,160L240,192C480,224,960,288,1200,256L1440,224L1440,320L1200,320C960,320,480,320,240,320L0,320Z"></path></svg>') !important;
+            url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none" opacity="0.10"><path fill="%231B5E20" d="M0,224L120,202.7C240,181,480,139,720,138.7C960,139,1200,181,1320,202.7L1440,224L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path><path fill="%232E7D32" d="M0,160L240,192C480,224,960,288,1200,256L1440,224L1440,320L1200,320C960,320,480,320,240,320L0,320Z"></path></svg>') !important;
         background-size: 100% 100%, 100% 100%, 100% 400px !important;
         background-repeat: no-repeat !important;
         background-position: top center !important;
@@ -134,7 +134,7 @@ st.markdown("""
     }
     
     section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label[data-checked="true"] {
-        background-color: #1B5E20 !important;
+        background-color: white !important;
         color: #FFFFFF !important;
         box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.12) !important;
     }
@@ -206,7 +206,7 @@ st.markdown("""
     
     /* Institutional Premium Global Buttons */
     .stButton>button {
-        background-color: #1B5E20 !important;
+        background-color: white !important;
         color: #FFFFFF !important;
         font-weight: 600 !important;
         font-size: 16px !important;
@@ -238,10 +238,10 @@ st.markdown("""
     }
     
     .header-left-brand {
-        font-size: 22px;
-        font-weight: 700;
-        color: #1b5e20;
-    }
+    font-size: 22px;
+    font-weight: 700;
+    color: white !important;
+}
     
     .header-right-meta {
         font-size: 15px;
@@ -264,6 +264,23 @@ st.markdown("""
         border: 1px solid #E5E7EB !important;
         border-radius: 10px !important;
     }
+    section[data-testid="stSidebar"] * {
+    color: white !important;
+}
+
+section[data-testid="stSidebar"] label {
+    color: white !important;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+}
+
+section[data-testid="stSidebar"] span {
+    color: white !important;
+}
+
+section[data-testid="stSidebar"] p {
+    color: white !important;
+}
     
     hr {
         border-top: 1px solid #E5E7EB !important;
@@ -273,13 +290,40 @@ st.markdown("""
 
 # Top Corporate Navigation Bar Header Integration
 st.markdown(f"""
-    <div class="top-header-navbar">
-        <div class="header-left-brand">📈 FINMATE AI</div>
-        <div class="header-right-meta">
-            🔍 &nbsp;&nbsp;&nbsp;&nbsp; 🔔 &nbsp;&nbsp;&nbsp;&nbsp; 👤 &nbsp;&nbsp;
-            <b>{greeting_msg}, Kirtimaan</b> &nbsp;|&nbsp; {current_day_str} &nbsp;|&nbsp; {current_time_str}
+<div class="top-header-navbar">
+
+    <div class="header-left-brand">
+        
+        <span style="
+            font-size:42px;
+            font-weight:800;
+            color:white;
+            letter-spacing:2px;
+        ">
+            FINMATE AI
+        </span>
+
+        <div style="
+            font-size:12px;
+            color:#A5D6A7;
+            letter-spacing:3px;
+            margin-top:-5px;
+        ">
+            WEALTH GROWTH ENGINE
         </div>
     </div>
+
+    <div class="header-right-meta">
+        🔔 &nbsp;&nbsp;
+        👤 &nbsp;&nbsp;
+        <b>{greeting_msg}, User</b>
+        &nbsp; | &nbsp;
+        {current_day_str}
+        &nbsp; | &nbsp;
+        {current_time_str}
+    </div>
+
+</div>
 """, unsafe_allow_html=True)
 
 # ----------------- SESSION STATE CONTEXT INITIALIZATION -----------------
@@ -396,7 +440,7 @@ if page == "Dashboard":
         st.markdown("<div class='section-headline'>Your Progress Tracker</div>", unsafe_allow_html=True)
         categories = ['Emergency Fund Reserve', 'Core Wealth Portfolio', 'Retirement Index Target']
         progress = [85, 45, 22]
-        fig_bar = px.bar(x=progress, y=categories, orientation='h', range_x=[0, 100], color_discrete_sequence=['#1B5E20'])
+        fig_bar = px.bar(x=progress, y=categories, orientation='h', range_x=[0, 100], color_discrete_sequence=['white !important'])
         fig_bar.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color='#1F2937', margin=dict(t=20,b=20,l=20,r=20))
         st.plotly_chart(fig_bar, use_container_width=True)
 
@@ -496,7 +540,7 @@ elif page == "EMI Calculator":
         st.metric("Total Loan Interest Cost", f"₹{interest:,}")
         st.metric("Total Payout Amount", f"₹{total_pay:,}")
         
-    fig_emi = px.pie(names=['Loan Principal Base', 'Extra Interest Cost Burden'], values=[p, interest], color_discrete_sequence=['#1B5E20', '#EF4444'])
+    fig_emi = px.pie(names=['Loan Principal Base', 'Extra Interest Cost Burden'], values=[p, interest], color_discrete_sequence=['white !important', '#EF4444'])
     fig_emi.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color='#1F2937')
     st.plotly_chart(fig_emi, use_container_width=True)
 
