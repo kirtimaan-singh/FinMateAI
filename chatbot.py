@@ -2,7 +2,6 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
-from datetime import datetime
 from calculators import calculate_sip, calculate_emi, calculate_retirement, calculate_fire
 from budget import get_budget_recommendations
 from goals import calculate_goal_required
@@ -11,165 +10,140 @@ from ai_insights import get_financial_health_score, query_finmate_ai
 from reports import generate_report_summary
 
 # Set up page configurations and remove default margins
-st.set_page_config(page_title="FinMate AI", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="FinMateAI", layout="wide")
 
-# ⏰ Dynamic Date, Time & Greeting Calculation Engine (Runs automatically on render)
-now = datetime.now()
-current_hour = now.hour
-current_day_str = now.strftime("%A, %d %B %Y")
-current_time_str = now.strftime("%I:%M %p")
-
-if 5 <= current_hour < 12:
-    greeting_msg = "Good Morning"
-elif 12 <= current_hour < 17:
-    greeting_msg = "Good Afternoon"
-elif 17 <= current_hour < 21:
-    greeting_msg = "Good Evening"
-else:
-    greeting_msg = "Good Night"
-
-# High-Fidelity Premium UI Stylesheets (Inspired by Groww, INDmoney, Zerodha & CRED)
+# High-Fidelity UI Custom Style Sheets (Inspired by Groww, Zerodha & INDmoney)
 st.markdown("""
     <style>
-    /* Global Canvas Architecture & Serif Typography Overrides */
+    /* Global Background, Typography, and Layout Structural Overrides */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+    
     html, body, [data-testid="stAppViewContainer"], .stApp {
         background-color: #F5F7F6 !important;
-        /* Ambient fintech low-opacity abstract geometric waves & mountain lines */
-        background-image: 
-            radial-gradient(circle at 90% 10%, rgba(27, 94, 32, 0.04) 0%, transparent 50%),
-            linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(245, 247, 246, 1) 100%),
-            url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none" opacity="0.10"><path fill="%231B5E20" d="M0,224L120,202.7C240,181,480,139,720,138.7C960,139,1200,181,1320,202.7L1440,224L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path><path fill="%232E7D32" d="M0,160L240,192C480,224,960,288,1200,256L1440,224L1440,320L1200,320C960,320,480,320,240,320L0,320Z"></path></svg>') !important;
-        background-size: 100% 100%, 100% 100%, 100% 400px !important;
-        background-repeat: no-repeat !important;
-        background-position: top center !important;
+        /* Subtle architectural vector wave background pattern */
+        background-image: radial-gradient(circle at 80% 20%, rgba(27, 94, 32, 0.03) 0%, transparent 40%),
+                          linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(245,247,246,1) 100%) !important;
         color: #1F2937 !important;
         font-family: "Times New Roman", Times, serif !important;
     }
     
-    /* Enforce rigid typography scales across all functional components */
+    /* Enforce Serif Style Typography Globally across elements */
     h1, h2, h3, h4, h5, h6, p, label, span, div, button, input, select {
         font-family: "Times New Roman", Times, serif !important;
     }
     
-    /* Font Sizing Hierarchy Constraints */
-    .dashboard-main-title {
-        font-size: 42px !important;
-        font-weight: 700 !important;
+    h1, h2, h3 {
         color: #1F2937 !important;
-        margin-bottom: 2px !important;
-    }
-    
-    .section-headline {
-        font-size: 30px !important;
         font-weight: 700 !important;
-        color: #1F2937 !important;
-        margin-top: 24px !important;
-        margin-bottom: 16px !important;
-    }
-    
-    .normal-body-text {
-        font-size: 18px !important;
-        color: #44475B !important;
     }
 
-    /* Total Dev Platform Cleanup: Hides raw Streamlit frame headers and footers */
+    /* Hide Default Streamlit Branding Elements (Menu, Deploy button, Footer) */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     div[data-testid="stDeployButton"] {display: none;}
     
-    /* Premium Dark Green Sidebar Panel Container */
+    /* Premium Dark Green Sidebar Custom Layout Injection */
     section[data-testid="stSidebar"] {
         background: linear-gradient(180deg, #0B3D2E 0%, #14532D 100%) !important;
         border-right: none !important;
         box-shadow: 4px 0px 24px rgba(0, 61, 46, 0.15) !important;
     }
     
-    /* Company Branding Logo Block inside Sidebar */
-    .sidebar-brand-wrapper {
-        padding: 24px 16px;
+    /* Logo Container and Text Formatting */
+    .sidebar-logo-container {
+        padding: 24px 12px;
         text-align: left;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         margin-bottom: 20px;
     }
     
-    .brand-main-text {
+    .sidebar-logo-text {
         color: #FFFFFF !important;
-        font-size: 26px !important;
+        font-size: 24px !important;
         font-weight: 700 !important;
         letter-spacing: -0.5px;
     }
     
-    .brand-sub-text {
+    .sidebar-logo-sub {
         color: #00D09C !important;
-        font-size: 12px !important;
-        font-weight: 500;
-        letter-spacing: 0.5px;
+        font-size: 11px !important;
+        letter-spacing: 1px;
+        text-transform: uppercase;
         display: block;
         margin-top: 2px;
     }
 
-    /* Enforced Sidebar Item Typography & Interactivity Configurations */
-    section[data-testid="stSidebar"] .stRadio > label,
+    /* Sidebar Navigation List Controls */
+    section[data-testid="stSidebar"] .stRadio > label {
+        display: none !important;
+    }
+    
     section[data-testid="stSidebar"] div[data-testid="stWidgetLabel"] {
         display: none !important;
     }
     
+    section[data-testid="stSidebar"] label[data-testid="stWidgetLabel"] {
+        display: none !important;
+    }
+    
+    /* Custom Sidebar Item Hover Actions */
     section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label {
         background-color: transparent !important;
-        color: rgba(255, 255, 255, 0.8) !important;
+        color: rgba(255, 255, 255, 0.75) !important;
         border-radius: 8px !important;
-        padding: 12px 18px !important;
+        padding: 10px 16px !important;
         margin-bottom: 6px !important;
         border: none !important;
-        font-size: 18px !important;
-        font-weight: 600 !important;
         transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        font-size: 15px !important;
     }
     
     section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label:hover {
         background-color: rgba(255, 255, 255, 0.08) !important;
         color: #FFFFFF !important;
-        transform: translateX(6px);
+        transform: translateX(4px);
     }
     
     section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label[data-checked="true"] {
-        background-color: white !important;
+        background-color: #1B5E20 !important;
         color: #FFFFFF !important;
-        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.12) !important;
+        font-weight: 600 !important;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1) !important;
     }
 
-    /* Premium White Floating Analytics Metric Cards */
+    /* Premium Light Fintech Component Display Metrics */
     div[data-testid="stMetric"] {
         background-color: #FFFFFF !important;
         border: 1px solid rgba(0, 0, 0, 0.04) !important;
         border-radius: 16px !important;
         padding: 24px !important;
         box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.02) !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        transition: all 0.3s ease !important;
     }
     
     div[data-testid="stMetric"]:hover {
         transform: translateY(-4px);
-        box-shadow: 0px 12px 30px rgba(27, 94, 32, 0.06) !important;
-        border-color: rgba(27, 94, 32, 0.15) !important;
+        box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.05) !important;
+        border-color: rgba(27, 94, 32, 0.1) !important;
     }
     
     div[data-testid="stMetricLabel"] {
         color: #6B7280 !important;
         font-size: 14px !important;
         font-weight: 500 !important;
+        text-transform: none !important;
     }
     
     div[data-testid="stMetricValue"] {
         color: #1F2937 !important;
-        font-size: 32px !important;
+        font-size: 28px !important;
         font-weight: 700 !important;
         margin-top: 6px !important;
     }
     
-    /* Fintech App Row Product Cards Layout */
-    .premium-tool-card {
+    /* Institutional Premium Product Card Grids */
+    .product-card {
         background: #FFFFFF;
         border: 1px solid rgba(0, 0, 0, 0.04);
         border-radius: 16px;
@@ -179,77 +153,32 @@ st.markdown("""
         transition: all 0.3s ease;
     }
     
-    .premium-tool-card:hover {
+    .product-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0px 12px 32px rgba(27, 94, 32, 0.07);
-        border-color: rgba(27, 94, 32, 0.18);
+        box-shadow: 0px 12px 30px rgba(27, 94, 32, 0.06);
+        border-color: rgba(27, 94, 32, 0.15);
     }
     
-    .tool-card-icon {
-        font-size: 30px;
+    .product-icon {
+        font-size: 28px;
         margin-bottom: 12px;
         display: inline-block;
     }
     
-    .tool-card-title {
-        font-size: 20px !important;
+    .product-title {
+        font-size: 18px !important;
         font-weight: 700 !important;
         color: #1F2937 !important;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
     }
     
-    .tool-card-desc {
-        font-size: 15px !important;
+    .product-desc {
+        font-size: 14px !important;
         color: #6B7280 !important;
-        line-height: 1.5;
+        line-height: 1.4;
     }
     
-    /* Institutional Premium Global Buttons */
-    .stButton>button {
-        background-color: white !important;
-        color: #FFFFFF !important;
-        font-weight: 600 !important;
-        font-size: 16px !important;
-        border-radius: 10px !important;
-        border: none !important;
-        padding: 12px 24px !important;
-        transition: all 0.25s ease !important;
-        box-shadow: 0px 4px 12px rgba(27, 94, 32, 0.15) !important;
-        width: 100%;
-    }
-    
-    .stButton>button:hover {
-        background-color: #2E7D32 !important;
-        transform: translateY(-2px);
-        box-shadow: 0px 6px 16px rgba(46, 125, 50, 0.25) !important;
-    }
-    
-    /* Custom Header Top Navigation Bar Layout Component */
-    .top-header-navbar {
-        background-color: #FFFFFF;
-        border: 1px solid rgba(0, 0, 0, 0.04);
-        padding: 14px 32px;
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 32px;
-        box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.01);
-    }
-    
-    .header-left-brand {
-    font-size: 22px;
-    font-weight: 700;
-    color: white !important;
-}
-    
-    .header-right-meta {
-        font-size: 15px;
-        color: #44475B;
-        font-weight: 500;
-        text-align: right;
-    }
-
+    /* Custom Styled UI System Forms and Alerts */
     div[data-testid="stForm"], .stAlert {
         background-color: #FFFFFF !important;
         border: 1px solid rgba(0, 0, 0, 0.04) !important;
@@ -258,75 +187,55 @@ st.markdown("""
         padding: 28px !important;
     }
     
+    /* Flat Institutional Flat Premium Buttons */
+    .stButton>button {
+        background-color: #1B5E20 !important;
+        color: #FFFFFF !important;
+        font-weight: 600 !important;
+        font-size: 15px !important;
+        border-radius: 10px !important;
+        border: none !important;
+        padding: 12px 28px !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0px 4px 12px rgba(27, 94, 32, 0.15) !important;
+    }
+    
+    .stButton>button:hover {
+        background-color: #2E7D32 !important;
+        transform: translateY(-1px);
+        box-shadow: 0px 6px 16px rgba(46, 125, 50, 0.25) !important;
+    }
+    
+    /* Input element fields architecture alignment */
     input, select, textarea {
         background-color: #FFFFFF !important;
         color: #1F2937 !important;
         border: 1px solid #E5E7EB !important;
         border-radius: 10px !important;
+        padding: 10px !important;
     }
-    section[data-testid="stSidebar"] * {
-    color: white !important;
-}
-
-section[data-testid="stSidebar"] label {
-    color: white !important;
-    font-size: 20px !important;
-    font-weight: 600 !important;
-}
-
-section[data-testid="stSidebar"] span {
-    color: white !important;
-}
-
-section[data-testid="stSidebar"] p {
-    color: white !important;
-}
+    
+    input:focus, select:focus {
+        border-color: #1B5E20 !important;
+        box-shadow: 0 0 0 1px #1B5E20 !important;
+    }
     
     hr {
         border-top: 1px solid #E5E7EB !important;
+        margin: 28px 0 !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# Top Corporate Navigation Bar Header Integration
-st.markdown(f"""
-<div class="top-header-navbar">
-
-    <div class="header-left-brand">
-        
-        <span style="
-            font-size:42px;
-            font-weight:800;
-            color:white;
-            letter-spacing:2px;
-        ">
-            FINMATE AI
-        </span>
-
-        <div style="
-            font-size:12px;
-            color:#A5D6A7;
-            letter-spacing:3px;
-            margin-top:-5px;
-        ">
-            WEALTH GROWTH ENGINE
-        </div>
+# Custom Institutional Logo Branding Injector inside the Dark Green Sidebar
+st.sidebar.markdown("""
+    <div class="sidebar-logo-container">
+        <div class="sidebar-logo-text">📈 FinMateAI</div>
+        <div class="sidebar-logo-sub">Wealth Growth Engine</div>
     </div>
-
-    <div class="header-right-meta">
-        🔔 &nbsp;&nbsp;
-        👤 &nbsp;&nbsp;
-        <b>{greeting_msg}, User</b>
-        &nbsp; | &nbsp;
-        {current_day_str}
-        &nbsp; | &nbsp;
-        {current_time_str}
-    </div>
-
-</div>
 """, unsafe_allow_html=True)
 
-# ----------------- SESSION STATE CONTEXT INITIALIZATION -----------------
+# Application Context/Session Management System Initialization
 if 'income' not in st.session_state: st.session_state.income = 75000
 if 'rent' not in st.session_state: st.session_state.rent = 15000
 if 'food' not in st.session_state: st.session_state.food = 8000
@@ -335,134 +244,139 @@ if 'util' not in st.session_state: st.session_state.util = 4000
 if 'misc' not in st.session_state: st.session_state.misc = 3000
 if 'chat_history' not in st.session_state: st.session_state.chat_history = []
 
-# Core Left Menu Router Mapping System
+# Sidebar Navigation Panel - Using Beginner-Friendly Simplified Language Standard
 page = st.sidebar.radio("Navigate Workspace", [
     "Dashboard", "AI Finance Coach", "Budget Planner", 
     "SIP Calculator", "EMI Calculator", "Goal Planner", 
     "Investments", "Reports"
 ])
 
-# Mathematical Vector Computation Matrix (Maintained precisely from core engine)
+# Global Aggregation Variable Set
 total_expenses = st.session_state.rent + st.session_state.food + st.session_state.fun + st.session_state.util + st.session_state.misc
 calculated_savings = st.session_state.income - total_expenses
 savings_ratio = (calculated_savings / st.session_state.income) * 100 if st.session_state.income > 0 else 0
 health_score, health_status = get_financial_health_score(savings_ratio, 25)
 
-# ----------------- PAGE 1: HOME DASHBOARD -----------------
+# ----------------- PAGE 1: DASHBOARD -----------------
 if page == "Dashboard":
-    st.markdown("<div class='dashboard-main-title'>Welcome back, Kirtimaan!</div>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #6B7280; font-size: 18px; margin-bottom: 28px;'>Here's your financial overview for today.</p>", unsafe_allow_html=True)
+    st.markdown("<h1 style='margin-bottom: 4px;'>Welcome Back</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #6B7280; font-size: 16px; margin-bottom: 32px;'>Here's your money summary for today.</p>", unsafe_allow_html=True)
     
-    # Premium Upper Display Performance Metrics Grid
+    # Premium Responsive Analytics Top Cards
     col1, col2, col3, col4, col5 = st.columns(5)
     with col1: st.metric("Monthly Income", f"₹{st.session_state.income:,}")
     with col2: st.metric("Expenses", f"₹{total_expenses:,}")
     with col3: st.metric("Savings", f"₹{calculated_savings:,}")
-    with col4: st.metric("Investments", f"₹{int(calculated_savings * 0.53):,}")
+    with col4: st.metric("Investments", f"₹{int(calculated_savings * 0.6):,}")
     with col5: st.metric("Financial Health Score", f"{health_score}/100", f"Status: {health_status}")
     
-    st.markdown("<div class='section-headline'>Recent Insights</div>", unsafe_allow_html=True)
-    ins_c1, ins_c2, ins_c3, ins_c4 = st.columns(4)
-    with ins_c1: st.success("📈 You saved 53% this month.")
-    with ins_c2: st.info("✨ Your expenses are under control.")
-    with ins_c3: st.warning("⚠️ Increase SIP by ₹2,000.")
-    with ins_c4: st.success("🎯 You are on track to reach your goal.")
+    st.write("---")
+    
+    # Insights Section Layout Block
+    st.subheader("Smart Insights")
+    ins_c1, ins_c2, ins_c3 = st.columns(3)
+    with ins_c1:
+        st.info(f"✨ You saved {savings_ratio:.0f}% of your total take-home income this month.")
+    with ins_c2:
+        st.warning("⚠️ How much of your income goes toward loans? Your debt payouts are currently slightly elevated.")
+    with ins_c3:
+        st.success("📈 Wealth builder action: Increase your automated monthly SIP by ₹2,000 to reach goals faster.")
         
     st.write("---")
     
-    # Products & Tools Section Grid (Groww Institutional UI Architecture)
-    st.markdown("<div class='section-headline'>Our Products & Tools</div>", unsafe_allow_html=True)
+    # Products & Tools Sections Layout (Groww Card Matrix Style Layout)
+    st.subheader("Products & Tools")
     p_col1, p_col2, p_col3 = st.columns(3)
     with p_col1:
         st.markdown("""
-            <div class="premium-tool-card">
-                <div class="tool-card-icon">💳</div>
-                <div class="tool-card-title">Budget Planner</div>
-                <div class="tool-card-desc">Track exactly where your money goes every single month and optimize your monthly utility habits instantly.</div>
+            <div class="product-card">
+                <div class="product-icon">💳</div>
+                <div class="product-title">Budget Planner</div>
+                <div class="product-desc">Track exactly where your money goes every single month and optimize your monthly utility habits instantly.</div>
             </div>
         """, unsafe_allow_html=True)
     with p_col2:
         st.markdown("""
-            <div class="premium-tool-card">
-                <div class="tool-card-icon">📈</div>
-                <div class="tool-card-title">SIP Calculator</div>
-                <div class="tool-card-desc">See how small investments grow over time into large wealth using standard compounding equations.</div>
+            <div class="product-card">
+                <div class="product-icon">📈</div>
+                <div class="product-title">SIP Calculator</div>
+                <div class="product-desc">See how small investments grow over time into large wealth using standard compounding equations.</div>
             </div>
         """, unsafe_allow_html=True)
     with p_col3:
         st.markdown("""
-            <div class="premium-tool-card">
-                <div class="tool-card-icon">🏠</div>
-                <div class="tool-card-title">EMI Calculator</div>
-                <div class="tool-card-desc">Check out exactly how much your monthly loan installment options will look like before talking to banks.</div>
+            <div class="product-card">
+                <div class="product-icon">🏠</div>
+                <div class="product-title">EMI Calculator</div>
+                <div class="product-desc">Check out exactly how much your monthly loan installment options will look like before talking to banks.</div>
             </div>
         """, unsafe_allow_html=True)
 
     p_col4, p_col5, p_col6 = st.columns(3)
     with p_col4:
         st.markdown("""
-            <div class="premium-tool-card">
-                <div class="tool-card-icon">🎯</div>
-                <div class="tool-card-title">Goal Planner</div>
-                <div class="tool-card-desc">Map out specific allocations for buying your dream home, vehicle assets, or emergency backup funds.</div>
+            <div class="product-card">
+                <div class="product-icon">🎯</div>
+                <div class="product-title">Goal Planner</div>
+                <div class="product-desc">Map out specific allocations for buying your dream home, vehicle assets, or emergency backup funds.</div>
             </div>
         """, unsafe_allow_html=True)
     with p_col5:
         st.markdown("""
-            <div class="premium-tool-card">
-                <div class="tool-card-icon">💼</div>
-                <div class="tool-card-title">Investments</div>
-                <div class="tool-card-desc">Where should you invest your money? Evaluate risk setups based on conservative or aggressive allocations.</div>
+            <div class="product-card">
+                <div class="product-icon">💼</div>
+                <div class="product-title">Investment Planner</div>
+                <div class="product-desc">Where should you invest your money? Evaluate risk setups based on conservative or aggressive allocations.</div>
             </div>
         """, unsafe_allow_html=True)
     with p_col6:
         st.markdown("""
-            <div class="premium-tool-card">
-                <div class="tool-card-icon">🛑</div>
-                <div class="tool-card-title">Debt Manager</div>
-                <div class="tool-card-desc">Organize multiple liabilities using accelerated paydown structures like the Avalanche methodology.</div>
+            <div class="product-card">
+                <div class="product-icon">🛑</div>
+                <div class="product-title">Debt Manager</div>
+                <div class="product-desc">Organize multiple liabilities using accelerated paydown structures like the Avalanche methodology.</div>
             </div>
         """, unsafe_allow_html=True)
 
     st.write("---")
     
-    # Financial Analytics Charts Interface (Soft green thematic styling)
+    # Modern Analytics Charts Matrix Block
     col_left, col_right = st.columns(2)
     with col_left:
-        st.markdown("<div class='section-headline'>Where are you spending your money?</div>", unsafe_allow_html=True)
+        st.subheader("Where are you spending your money?")
         labels = ['Rent & Housing', 'Groceries & Food', 'Fun & Lifestyle', 'Connectivity/Utilities', 'Unplanned Extras']
         values = [st.session_state.rent, st.session_state.food, st.session_state.fun, st.session_state.util, st.session_state.misc]
-        fig = px.pie(names=labels, values=values, hole=0.6, color_discrete_sequence=px.colors.sequential.Greens_r)
+        fig = px.pie(names=labels, values=values, hole=0.6, color_discrete_sequence=px.colors.sequential.Plotly3)
         fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color='#1F2937', margin=dict(t=20,b=20,l=20,r=20))
         st.plotly_chart(fig, use_container_width=True)
         
     with col_right:
-        st.markdown("<div class='section-headline'>Your Progress Tracker</div>", unsafe_allow_html=True)
+        st.subheader("Your Progress Tracker")
         categories = ['Emergency Fund Reserve', 'Core Wealth Portfolio', 'Retirement Index Target']
         progress = [85, 45, 22]
-        fig_bar = px.bar(x=progress, y=categories, orientation='h', range_x=[0, 100], color_discrete_sequence=['white !important'])
+        fig_bar = px.bar(x=progress, y=categories, orientation='h', range_x=[0, 100], color_discrete_sequence=['#1B5E20'])
         fig_bar.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color='#1F2937', margin=dict(t=20,b=20,l=20,r=20))
         st.plotly_chart(fig_bar, use_container_width=True)
 
     st.write("---")
     
-    # Quick Action Buttons Component and Daily Insight Card Widget
+    # Quick Actions Framework and Daily Financial Quotes Component
     qa_col, tip_col = st.columns([2, 1])
     with qa_col:
-        st.markdown("<div class='section-headline'>Quick Actions</div>", unsafe_allow_html=True)
+        st.subheader("Quick Actions")
         q_c1, q_c2, q_c3, q_c4 = st.columns(4)
         with q_c1: st.button("➕ Add Expense")
         with q_c2: st.button("🚀 Start SIP")
         with q_c3: st.button("📑 Download Report")
         with q_c4: st.button("🔍 Check Loan Eligibility")
     with tip_col:
-        st.markdown("<div class='section-headline'>Daily Finance Tip</div>", unsafe_allow_html=True)
+        st.subheader("Daily Money Tip")
         st.info("💬 *\"The best investment you can make is in yourself.\"*")
 
 # ----------------- PAGE 2: AI FINANCE COACH -----------------
 elif page == "AI Finance Coach":
-    st.markdown("<div class='dashboard-main-title'>🤖 AI Finance Coach</div>", unsafe_allow_html=True)
-    st.markdown("<p class='normal-body-text'>Ask any question about balancing your cash flow, managing loans, or understanding compound interest.</p>", unsafe_allow_html=True)
+    st.title("🤖 AI Finance Coach")
+    st.write("Ask any question about balancing your cash flow, managing loans, or understanding compound interest.")
     
     user_query = st.text_input("Ask a question in plain English (e.g., 'Where should you invest your money?'):")
     if user_query:
@@ -474,11 +388,10 @@ elif page == "AI Finance Coach":
 
 # ----------------- PAGE 3: BUDGET PLANNER -----------------
 elif page == "Budget Planner":
-    st.markdown("<div class='dashboard-main-title'>💳 Budget Planner</div>", unsafe_allow_html=True)
-    st.write("---")
+    st.title("💳 Budget Planner")
     col_inputs, col_outputs = st.columns([1, 1])
     with col_inputs:
-        st.markdown("<div class='section-headline'>Enter your numbers:</div>", unsafe_allow_html=True)
+        st.subheader("Enter your numbers:")
         st.session_state.income = st.number_input("Monthly Income", value=st.session_state.income, step=5000)
         st.session_state.rent = st.number_input("Rent / Housing Cost", value=st.session_state.rent, step=1000)
         st.session_state.food = st.number_input("Groceries & Food", value=st.session_state.food, step=1000)
@@ -487,7 +400,7 @@ elif page == "Budget Planner":
         st.session_state.misc = st.number_input("Other Extra Expenses", value=st.session_state.misc, step=500)
         
     with col_outputs:
-        st.markdown("<div class='section-headline'>Your Budget Analysis</div>", unsafe_allow_html=True)
+        st.subheader("Your Budget Analysis")
         sav, pct, recs = get_budget_recommendations(st.session_state.income, {
             'Rent': st.session_state.rent, 'Food': st.session_state.food,
             'Entertainment': st.session_state.fun, 'Utilities': st.session_state.util,
@@ -500,8 +413,7 @@ elif page == "Budget Planner":
 
 # ----------------- PAGE 4: SIP CALCULATOR -----------------
 elif page == "SIP Calculator":
-    st.markdown("<div class='dashboard-main-title'>📈 SIP Calculator</div>", unsafe_allow_html=True)
-    st.write("---")
+    st.title("📈 SIP Calculator")
     c1, c2, c3 = st.columns(3)
     with c1: monthly_sip = st.slider("Monthly SIP Investment amount (₹)", 1000, 100000, 10000, step=1000)
     with c2: expected_return = st.slider("Expected Annual Return (%)", 5.0, 22.0, 12.0, step=0.5)
@@ -527,8 +439,7 @@ elif page == "SIP Calculator":
 
 # ----------------- PAGE 5: EMI CALCULATOR -----------------
 elif page == "EMI Calculator":
-    st.markdown("<div class='dashboard-main-title'>🏠 EMI Calculator</div>", unsafe_allow_html=True)
-    st.write("---")
+    st.title("🏠 EMI Calculator")
     l_col, r_col = st.columns(2)
     with l_col:
         p = st.number_input("Total Loan Amount (₹)", value=500000, step=50000)
@@ -540,14 +451,13 @@ elif page == "EMI Calculator":
         st.metric("Total Loan Interest Cost", f"₹{interest:,}")
         st.metric("Total Payout Amount", f"₹{total_pay:,}")
         
-    fig_emi = px.pie(names=['Loan Principal Base', 'Extra Interest Cost Burden'], values=[p, interest], color_discrete_sequence=['white !important', '#EF4444'])
+    fig_emi = px.pie(names=['Loan Principal Base', 'Extra Interest Cost Burden'], values=[p, interest], color_discrete_sequence=['#1B5E20', '#EF4444'])
     fig_emi.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color='#1F2937')
     st.plotly_chart(fig_emi, use_container_width=True)
 
 # ----------------- PAGE 6: GOAL PLANNER -----------------
 elif page == "Goal Planner":
-    st.markdown("<div class='dashboard-main-title'>🎯 Goal Planner</div>", unsafe_allow_html=True)
-    st.write("---")
+    st.title("🎯 Goal Planner")
     g_type = st.selectbox("What are you saving up for?", ["Dream House Acquisition", "High Performance EV Car Purchase", "Global Family Vacation", "Children Higher Education Fund"])
     g_target = st.number_input("Target Amount Needed (₹)", value=2500000, step=50000)
     g_time = st.slider("Years left to reach this goal", 1, 25, 8)
@@ -557,8 +467,7 @@ elif page == "Goal Planner":
 
 # ----------------- PAGE 7: INVESTMENTS -----------------
 elif page == "Investments":
-    st.markdown("<div class='dashboard-main-title'>💼 Where should you invest your money?</div>", unsafe_allow_html=True)
-    st.write("---")
+    st.title("💼 Where should you invest your money?")
     risk_appetite = st.selectbox("Choose your personal investing comfort level:", ["Conservative", "Moderate", "Aggressive"])
     target_alloc = get_asset_allocation(risk_appetite)
     
@@ -566,7 +475,7 @@ elif page == "Investments":
     fig_alloc.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color='#1F2937')
     st.plotly_chart(fig_alloc, use_container_width=True)
     
-    st.markdown("<div class='section-headline'>Audit your current investments tracker:</div>", unsafe_allow_html=True)
+    st.subheader("Audit your current investments tracker:")
     eq = st.slider("Your Current Stock Market / Equity Ratio (%)", 0, 100, 50)
     db = st.slider("Your Current Fixed Income / Debt Ratio (%)", 0, 100, 40)
     gd = st.slider("Your Current Safe Gold Ratio (%)", 0, 100, 10)
@@ -580,10 +489,10 @@ elif page == "Investments":
 
 # ----------------- PAGE 8: REPORTS -----------------
 elif page == "Reports":
-    st.markdown("<div class='dashboard-main-title'>📑 Performance Reports Studio</div>", unsafe_allow_html=True)
-    st.write("---")
+    st.title("📑 Performance Reports Studio")
     st.write("Review a clear structural breakdown of your real-time finance setups instantly.")
     
     text_summary = generate_report_summary(st.session_state.income, total_expenses, calculated_savings, health_score)
     st.text_area("Your Financial Diagnostic Matrix Statement Logs", value=text_summary, height=250)
     st.download_button(label="Download Text Statement", data=text_summary, file_name="FinMate_Statement.txt", mime="text/plain")
+    
