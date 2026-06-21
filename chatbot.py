@@ -30,6 +30,252 @@ elif 12 <= current_hour < 17:
 elif 17 <= current_hour < 21:
     greeting_msg = "Good evening"
 else:
+    greeting_msg = "Good afternoon" 
+
+# 3. 🎨 Premium Visible Typography Institutional UI Engine
+st.markdown("""
+    <style>
+    /* Global Container Workspace Background Reset */
+    html, body, [data-testid="stAppViewContainer"], .stApp {
+        background-color: #FFFFFF !important;
+        background-image: linear-gradient(180deg, rgba(245,247,246,0.3) 0%, #FFFFFF 100%) !important;
+        color: #1F2937 !important;
+        font-family: "Times New Roman", Times, serif !important;
+    }
+    
+    /* Rigid Typography Scaling Rules */
+    h1, h2, h3, h4, h5, h6, p, label, span, div, button, input, select {
+        font-family: "Times New Roman", Times, serif !important;
+    }
+    
+    .dashboard-title-box h1 {
+        font-size: 36px !important;
+        font-weight: 700 !important;
+        color: #1F2937 !important;
+        margin-bottom: 2px !important;
+    }
+    
+    .section-title-header {
+        font-size: 22px !important;
+        font-weight: 700 !important;
+        color: #1F2937 !important;
+        margin-top: 10px !important;
+        margin-bottom: 14px !important;
+    }
+
+    /* System Layout Toolbar Override Controls */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    div[data-testid="stDeployButton"] {display: none;}
+    
+    /* Dark Forest Green Sidebar UI Configuration */
+    section[data-testid="stSidebar"] {
+        background-color: #143D30 !important;
+        background-image: linear-gradient(180deg, #163E32 0%, #0C261E 100%) !important;
+        border-right: none !important;
+    }
+    
+    .sidebar-corporate-branding {
+        padding: 24px 16px;
+        font-size: 28px !important;
+        font-weight: 700 !important;
+        color: #FFFFFF !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        margin-bottom: 24px;
+        letter-spacing: -0.5px;
+    }
+    
+    .sidebar-corporate-branding span {
+        color: #00D09C !important;
+    }
+
+    /* FIXED: Enforced High-Contrast White Sidebar Radio Item Structure */
+    section[data-testid="stSidebar"] .stRadio > label,
+    section[data-testid="stSidebar"] div[data-testid="stWidgetLabel"] {
+        display: none !important;
+    }
+    
+    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label {
+        background-color: transparent !important;
+        color: #FFFFFF !important; /* Forces absolute visibility */
+        border-radius: 10px !important;
+        padding: 12px 20px !important;
+        margin-bottom: 4px !important;
+        border: none !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    /* Enforces child components like strings inside label to remain white */
+    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label * {
+        color: #FFFFFF !important;
+    }
+    
+    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: #FFFFFF !important;
+    }
+    
+    section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label[data-checked="true"] {
+        background-color: #235143 !important;
+        color: #FFFFFF !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    }
+    
+    /* Sidebar Premium Sinking Sider Box */
+    .premium-promo-card {
+        background-color: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 14px;
+        padding: 20px;
+        margin-top: 60px;
+        color: #FFFFFF;
+    }
+
+    /* Floating White Metric Dynamic Layout Blocks */
+    .dashboard-kpi-card {
+        background-color: #FFFFFF !important;
+        border: 1px solid #ECEFF1 !important;
+        border-radius: 14px !important;
+        padding: 20px !important;
+        box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.015) !important;
+        transition: all 0.25s ease;
+    }
+    
+    .dashboard-kpi-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.03) !important;
+    }
+    
+    .kpi-label { color: #78909C; font-size: 13px; font-weight: 500; }
+    .kpi-value { color: #1F2937; font-size: 24px; font-weight: 700; margin-top: 4px; }
+    .kpi-delta { font-size: 12px; font-weight: 600; margin-top: 4px; }
+
+    /* Products Cards Layout Structures */
+    .tool-matrix-box {
+        background: #FFFFFF;
+        border: 1px solid #ECEFF1;
+        border-radius: 14px;
+        padding: 20px;
+        margin-bottom: 16px;
+        transition: all 0.25s ease;
+    }
+    
+    .tool-matrix-box:hover {
+        box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.03);
+    }
+    
+    .tool-header-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+    .tool-avatar-icon { font-size: 24px; }
+    .tool-title-text { font-size: 16px !important; font-weight: 700 !important; color: #1F2937 !important; }
+    .tool-body-desc { font-size: 13px !important; color: #78909C !important; line-height: 1.45; }
+    
+    /* Custom Styled UI System Form Wrappers */
+    div[data-testid="stForm"], .stAlert {
+        background-color: #FFFFFF !important;
+        border: 1px solid #ECEFF1 !important;
+        border-radius: 14px !important;
+        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.01) !important;
+    }
+    
+    /* Institutional Primary UI Buttons Layout Mapping */
+    .stButton>button {
+        background-color: #FFFFFF !important;
+        color: #1F2937 !important;
+        font-weight: 600 !important;
+        font-size: 15px !important;
+        border-radius: 10px !important;
+        border: 1px solid #ECEFF1 !important;
+        padding: 12px 20px !important;
+        text-align: left !important;
+        width: 100%;
+        transition: all 0.2s ease;
+    }
+    
+    .stButton>button:hover {
+        background-color: #F8F9FA !important;
+        border-color: #CFD8DC !important;
+    }
+    
+    /* Input UI Form Field Enforcements */
+    input, select, textarea {
+        background-color: #FFFFFF !important;
+        color: #1F2937 !important;
+        border: 1px solid #ECEFF1 !important;
+        border-radius: 10px !important;
+    }
+    
+    hr { border-top: 1px solid #ECEFF1 !important; }
+
+    /* Top Horizontal Corporate Navigation Component Layout Grid */
+    .header-navbar-strip {
+        background-color: #FFFFFF;
+        border-bottom: 1px solid #ECEFF1;
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+    }
+    
+    .navbar-logo-area { font-size: 24px; font-weight: 700; color: #143D30; letter-spacing: -0.5px; }
+    .navbar-right-widget-tray { font-size: 14px; color: #546E7A; font-weight: 500; }
+    
+    /* Right side sub-greeting weather indicator segment layout */
+    .dynamic-time-subcard {
+        text-align: right;
+        font-size: 13px;
+        color: #78909C;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Top Premium Navigation Bar Layout Strip
+st.markdown("""
+    <div class="header-navbar-strip">
+        <div class="navbar-logo-area">FinMateAI <span style='color:#00D09C; font-size:16px;'>✦</span></div>
+        <div style="font-size:14px; color:#90A4AE; width:40%;">🔍 &nbsp;Search anything...</div>
+        <div class="navbar-right-widget-tray">
+            🔔<sup><span style='color:#00D09C;'>●</span></sup> &nbsp;&nbsp;&nbsp;&nbsp; 
+            <span style="background:#E0F2F1; color:#004D40; padding:6px 12px; border-radius:20px; font-weight:700;">K</span> 
+            &nbsp; Kirtimaan Singh ▾
+        </div>
+    </div>
+""", unsafe_allow_html=True)
+import streamlit as st
+import plotly.express as px
+import plotly.graph_objects as go
+import pandas as pd
+from datetime import datetime
+from calculators import calculate_sip, calculate_emi, calculate_retirement, calculate_fire
+from budget import get_budget_recommendations
+from goals import calculate_goal_required
+from portfolio import get_asset_allocation, evaluate_portfolio
+from ai_insights import get_financial_health_score, query_finmate_ai
+from reports import generate_report_summary
+
+# 1. Page Frame Layout Initial Configuration
+st.set_page_config(
+    page_title="FinMateAI",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# 2. ⏰ Dynamic Server-Side Live Clock System
+now = datetime.now()
+current_hour = now.hour
+current_day_str = now.strftime("%A, %d %B %Y")
+current_time_str = now.strftime("%I:%M %p")
+
+if 5 <= current_hour < 12:
+    greeting_msg = "Good morning"
+elif 12 <= current_hour < 17:
+    greeting_msg = "Good afternoon"
+elif 17 <= current_hour < 21:
+    greeting_msg = "Good evening"
+else:
     greeting_msg = "Good afternoon" # Default standard match fallback array configuration
 
 # 3. 🎨 Premium Clean Institutional UI Engine (Exact Styling Match)
