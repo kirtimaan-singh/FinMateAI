@@ -543,3 +543,23 @@ elif page == "Reports":
     text_summary = generate_report_summary(st.session_state.income, total_expenses, calculated_savings, health_score)
     st.text_area("Your Financial Diagnostic Matrix Statement Logs", value=text_summary, height=250)
     st.download_button(label="Download Text Statement", data=text_summary, file_name="FinMate_Statement.txt", mime="text/plain")
+    from datetime import datetime
+
+now = datetime.now()
+
+current_day = now.strftime("%A")
+current_date = now.strftime("%d %B %Y")
+current_time = now.strftime("%I:%M %p")
+
+hour = now.hour
+
+if 5 <= hour < 12:
+    greeting = "Good Morning"
+elif 12 <= hour < 17:
+    greeting = "Good Afternoon"
+elif 17 <= hour < 21:
+    greeting = "Good Evening"
+else:
+    greeting = "Good Night"
+
+header_text = f"{greeting}, Kirtimaan | {current_day}, {current_date} | {current_time}"
