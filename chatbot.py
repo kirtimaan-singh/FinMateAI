@@ -12,7 +12,7 @@ from reports import generate_report_summary
 # Set up page configurations
 st.set_page_config(page_title="FinMate AI", layout="wide")
 
-# Groww Light Theme CSS Injector - Custom card layouts, clean borders, custom typography
+# Groww Light Theme CSS Injector - Premium clean look
 st.markdown("""
     <style>
     /* Global Background and Typography Overrides */
@@ -130,25 +130,12 @@ if page == "📊 Home Dashboard":
     
     col1, col2, col3, col4 = st.columns(4)
     with col1: st.metric("Current Tracked Income", f"₹{st.session_state.income:,}")
-    with col2: st.metric("1D Outflows Outlay", f"₹{total_expenses:,}", delta=f"-{(total_expenses/st.session_state.income)*100:.1f}% Allocation", delta_color="inverse")
+    with col2: st.metric("Tracked Outflows Outlay", f"₹{total_expenses:,}", delta=f"-{(total_expenses/st.session_state.income)*100:.1f}% Allocation", delta_color="inverse")
     with col3: st.metric("Total Returns/Savings", f"₹{calculated_savings:,}", delta=f"+{savings_ratio:.1f}% Saved")
     with col4: st.metric("Financial Health Index", f"{health_score}/100", f"Status: {health_status}")
     
     st.write("---")
     
-    # Popular Bonds layout section built manually to simulate custom UI block cards
-    st.subheader("Popular Asset Allocation Vectors")
-    b_col1, b_col2, b_col3, b_col4 = st.columns(4)
-    with b_col1:
-        st.info("🎨 **Keertana Finserv**\n\n**13.60%** Yield • 15 months\n\n🔴 Rating: BBB")
-    with b_col2:
-        st.info("📱 **Navi Finserv**\n\n**10.75%** Yield • 18 months\n\n🟢 Rating: A")
-    with b_col3:
-        st.info("⚡ **IIFL Samasta**\n\n**10.70%** Yield • 11 months\n\n🟢 Rating: AA-")
-    with b_col4:
-        st.info("🏦 **Muthoot Micro**\n\n**10.45%** Yield • 16 months\n\n🟢 Rating: AA-")
-        
-    st.write("---")
     col_left, col_right = st.columns(2)
     with col_left:
         st.subheader("Asset Breakdown Architecture")
@@ -209,13 +196,13 @@ elif page == "📈 SIP & Investment Engine":
     st.title("📈 Systematic Investment Wealth Generator")
     c1, c2, c3 = st.columns(3)
     with c1: monthly_sip = st.slider("Target Monthly SIP Allocation (₹)", 1000, 100000, 10000, step=1000)
-    with c2: expected_return = st.slider("Expected Long-Term Return Multiplier (%)", 5.0, 22.0, 12.0, step=0.5)
+    with c2: expected_return = st.slider("Expected Annual Return (%)", 5.0, 22.0, 12.0, step=0.5)
     with c3: horizon_years = st.slider("Investment Compounding Horizon (Years)", 1, 40, 15)
     
     invested, wealth, total_value = calculate_sip(monthly_sip, expected_return, horizon_years)
     col_m1, col_m2, col_m3 = st.columns(3)
     with col_m1: st.metric("Principal Investment Outlay", f"₹{invested:,}")
-    with col_m2: st.metric("Compounded Return Growth Created", f"₹{wealth:,}")
+    with col_m2: st.metric("Total Returns Earned", f"₹{wealth:,}")
     with col_m3: st.metric("Total Projected Portfolio Net Value", f"₹{total_value:,}")
     
     st.write("### Multi-Tiered Projection Simulator (Alternative Commitments)")
