@@ -1,2 +1,6 @@
-Code paste
-Commit
+streamlit
+plotly
+pandas
+numpy
+matplotlib
+requests
